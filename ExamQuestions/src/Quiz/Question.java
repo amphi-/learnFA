@@ -1,32 +1,91 @@
 package Quiz;
 
+/**
+ * @author olaffthunder
+ * @version 1.0
+ * @lastChanged 01.16.14
+ */
 public class Question
 {
 	
 	private String m_questionText = "";
-	private String[] m_answers = new String[4];
-	private int m_givenAnswer = -1;
+	private String[] m_answers = new String[0];
 	private int m_correctAnswer = -1;
+	private final int MAXANSWERS = 4;
+	/**
+	 * Creates a new Question with it's answers. Also shuffles the order of answers.
+	 * 
+	 * @param question - The Question
+	 * @param answers  - Possible answers - only the first 4 would be taken
+	 * @param correctAnswer - the id of the correct answer
+	*/
 	public Question(String question, String[] answers, int correctAnswer)
 	{
-		for(int i = 0; i < answers.length; i++)
-			m_answers[i] = answers[i];
+		m_answers = answers;
 		m_questionText = question;
 		m_correctAnswer = correctAnswer;
+		shuffleAnswers();
 	}
 	
-	public void setGivenAnswer(int givenAnswer)
+	private void shuffleAnswers()
 	{
-		m_givenAnswer = givenAnswer;
+		String[] tmpAnswer = new String[MAXANSWERS];
+		String tmpAnswerText = "";		
+		int newCorrectAnswer = randomPosition()%tmpAnswer.length;
+		tmpAnswer[newCorrectAnswer] = m_answers[m_correctAnswer];
+		m_answers[m_correctAnswer] = null;
+		
+		for(int tmpCount = 0; tmpCount < tmpAnswer.length;)
+		{
+			int pos = randomPosition() % m_answers.length;
+			if(m_answers[pos] == null)
+				continue;
+			
+			if(tmpCount == m_correctAnswer)
+			{
+				tmpCount++;
+				continue;
+			}
+			
+			tmpAnswerText = m_answers[pos];
+
+			int newPos = randomPosition() % 4;
+			
+			if(tmpAnswer[newPos] != null)
+				continue;
+			
+			tmpAnswer[newPos] = tmpAnswerText;
+			m_answers[pos] = null;
+			tmpCount++;
+		}
+
+		m_correctAnswer = newCorrectAnswer;
+		m_answers = tmpAnswer;
 	}
-	
-	public boolean isAnswerCorrect()
+
+	private int randomPosition()
 	{
-		if(m_givenAnswer == -1 || m_correctAnswer == -1)
+		return (int)(Math.random() *100);
+	}
+		
+	
+	public boolean isAnswerCorrect(int givenAnswer)
+	{
+		if(m_correctAnswer == -1)
 			return false;
-		if(m_givenAnswer == m_correctAnswer)
+		if(givenAnswer == m_correctAnswer)
 			return true;
 		return false;
+	}
+	
+	public String getQuestion()
+	{
+		return m_questionText;
+	}
+	
+	public String[] getAnswers()
+	{
+		return m_answers;
 	}
 	
 }
