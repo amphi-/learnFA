@@ -3,8 +3,9 @@ learnFA v0.1dev 16/01/2014
 
 GENERAL INFORMATION
 ============================
-- this App is designed to give students the possibility to
-  learn for their finals in an easy and intuitive way
+- this Android App is designed to give german speaking students of the subject IT-Specialist 
+  (Fachinformatiker) the possibility to learn for their finals in an easy and 
+  intuitive way
 
 - this app is free to use, but may contain advertising
 
