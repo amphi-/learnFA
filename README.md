@@ -12,7 +12,7 @@ GENERAL INFORMATION
 
 INSTALLING
 ============================
-- first download the learnFA.apk file from learnFA.com/#download to your mobile device
+- first download the learnFA.apk file from www.learnFA.com/#download to your mobile device
 
 - before installing, go to “Settings,” select “Security” and then enable “Unknown Sources” 
 
@@ -36,12 +36,12 @@ MISC
 - you'd like to help us improving this app? Write us to developer@learnFA.com
 
 - as this is a community project we're doing this for free in our spare time, so if you
-  like this app, you can donor us via PayPal on learnFA.com/#donor
+  like this app, you can donor us via PayPal on www.learnFA.com/#donor
 
 ###############################################################################################
 you can reach us via
 
-web:    learnFA.com
+web:    www.learnFA.com
 email:  contact@learnFA.com
 irc:    learnFA@quakenet.de
 
