@@ -22,9 +22,13 @@ public class Question
 	public Question(String question, String[] answers, int correctAnswer)
 	{
 		m_answers = answers;
+		
+		
+		
 		m_questionText = question;
 		m_correctAnswer = correctAnswer;
 		shuffleAnswers();
+	
 	}
 	
 	private void shuffleAnswers()
