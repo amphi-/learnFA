@@ -1,17 +1,20 @@
 package Quiz;
 
+import Quiz.EventHandling.QuizEventSource;
+
+
 /**
  * @author olaffthunder
  * @version 1.0
- * @lastChanged 01.16.14
+ * @lastChanged 01.19.14
  */
 public class Question
 {
-	
 	private String m_questionText = "";
 	private String[] m_answers = new String[0];
 	private int m_correctAnswer = -1;
 	private final int MAXANSWERS = 4;
+	
 	/**
 	 * Creates a new Question with it's answers. Also shuffles the order of answers.
 	 * 
@@ -29,9 +32,10 @@ public class Question
 	
 	private void shuffleAnswers()
 	{
+	//TODO funktioniert doch noch nicht-.-"
 		String[] tmpAnswer = new String[MAXANSWERS];
 		String tmpAnswerText = "";		
-		int newCorrectAnswer = randomPosition()%tmpAnswer.length;
+		int newCorrectAnswer = randomPosition()%MAXANSWERS;
 		tmpAnswer[newCorrectAnswer] = m_answers[m_correctAnswer];
 		m_answers[m_correctAnswer] = null;
 		
@@ -66,16 +70,18 @@ public class Question
 	private int randomPosition()
 	{
 		return (int)(Math.random() *100);
-	}
-		
+	}		
 	
 	public boolean isAnswerCorrect(int givenAnswer)
 	{
 		if(m_correctAnswer == -1)
 			return false;
-		if(givenAnswer == m_correctAnswer)
-			return true;
-		return false;
+		return givenAnswer == m_correctAnswer;
+	}
+	
+	public void answer(int givenAnswer, QuizEventSource quizSource)
+	{		
+		quizSource.answerEvent(isAnswerCorrect(givenAnswer));
 	}
 	
 	public String getQuestion()
@@ -87,5 +93,5 @@ public class Question
 	{
 		return m_answers;
 	}
-	
+
 }

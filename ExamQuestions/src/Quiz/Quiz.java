@@ -1,61 +1,66 @@
 package Quiz;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import Quiz.EventHandling.QuizEventListener;
+import Quiz.EventHandling.QuizEventSource;
+import Utility.Funktions;
 
 /**
  * @author olaffthunder
  * @version 1.0
- * @lastChanged 01.16.14
+ * @lastChanged 01.19.14
  */
 public class Quiz 
 {
-	@SuppressWarnings("unused") //Eigentlich mault nur der JIT-Compiler dass ich das ned nutze...
-	private Question m_question = null;
 	private String m_questionText = "Wie heise ich?";
 	private String[] m_answers = {"Aron", "Felix", "Florian", "Simon"};
-
+	private boolean m_correctAnswer = false;
+	
 	public Quiz()
 	{
 	}
 	
 	public void startQuiz()
 	{
-		Question question = new Question(m_questionText, m_answers, 2);
-		System.out.println("Frage: " + question.getQuestion());
-		m_answers = question.getAnswers(); //TODO das hier ist nur ne schnelle Lösung gewesen! Muss sauber gestaltet werden!!!
-		for(int i = 0; i < m_answers.length; i++)
-			System.out.print("["+(i+1)+"] " + m_answers[i] + (i < m_answers.length -1 ? ", " : "\n"));
+		Statistics statistics = new Statistics();
+		do {
+			Question question = new Question(m_questionText, m_answers, 2);
+			statistics.increaseAmountTotalQuestions();
+			QuizEventSource handler = new QuizEventSource();
+			handler.addEventListener(new QuizEventListener(this));
 
-		System.out.println(question.isAnswerCorrect(getUserValue()));
+			System.out.println("Frage: " + question.getQuestion());
+			m_answers = question.getAnswers();
+			printQuestion(m_answers);
+			int bla = Funktions.getUserValue();
+			System.out.println(bla);
+			question.answer(bla, handler);
+			outputAnswerResult();
+			if(m_correctAnswer)
+				statistics.increaseAmountCorrectAnswer();
+			System.out.println("Do another Question? (y/n)");
+		} while (Funktions.validConsoleInput().equals("y"));
+
+		statistics.outputAll();
 	}
 		
-	public int getUserValue()
+	private void outputAnswerResult() 
 	{
-		BufferedReader lineIn = new BufferedReader(new InputStreamReader(System.in));
-		int userAnswer = -1;
-		String userInput = ""; 
-		while(userAnswer == -1)
+		if(m_correctAnswer)
 		{
-			try
-			{
-				userInput = lineIn.readLine();
-			}
-			catch(IOException e)
-			{
-				System.out.println("Konsolenfehler");
-			}
-			
-			try
-			{
-				userAnswer = Integer.parseInt(userInput);
-			}
-			catch(NumberFormatException e)
-			{
-				System.out.println("Geben sie eine Zahl wischen 1 und 4 ein!");
-			}
+			System.out.println("This answer was correct!");
+			return;
 		}
-		return userAnswer-1;
+		System.out.println("This answer was wrong!");		
+	}
+	
+	private void printQuestion(String[] answers)
+	{
+		for(int i = 0; i < m_answers.length; i++)
+			System.out.print("["+(i+1)+"] " + m_answers[i] + (i < m_answers.length -1 ? ", " : "\n"));
+	}
+	
+	public void setResult(boolean correctAnswer)
+	{
+		m_correctAnswer = correctAnswer;
 	}
 }
