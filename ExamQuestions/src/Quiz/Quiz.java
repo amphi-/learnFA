@@ -1,13 +1,13 @@
 package Quiz;
 
 import Quiz.EventHandling.QuizEventListener;
-import Quiz.EventHandling.QuizEventSource;
+import Quiz.EventHandling.StatisticsEventListener;
 import Utility.Funktions;
 
 /**
  * @author olaffthunder
  * @version 1.0
- * @lastChanged 01.19.14
+ * @lastChanged 01.21.14
  */
 public class Quiz 
 {
@@ -23,20 +23,19 @@ public class Quiz
 	{
 		Statistics statistics = new Statistics();
 		do {
-			Question question = new Question(m_questionText, m_answers, 2);
+			String []answers = new String[m_answers.length];
+			for(int i = 0; i < m_answers.length; i++)
+				answers[i] = m_answers[i];
+			Question question = new Question(m_questionText, answers, 2);
 			statistics.increaseAmountTotalQuestions();
-			QuizEventSource handler = new QuizEventSource();
-			handler.addEventListener(new QuizEventListener(this));
+			question.addEventListener(new QuizEventListener(this));
+			question.addEventListener(new StatisticsEventListener(statistics));
 
 			System.out.println("Frage: " + question.getQuestion());
-			m_answers = question.getAnswers();
-			printQuestion(m_answers);
-			int bla = Funktions.getUserValue();
-			System.out.println(bla);
-			question.answer(bla, handler);
+			answers = question.getAnswers();
+			printQuestion(answers);
+			question.answer();
 			outputAnswerResult();
-			if(m_correctAnswer)
-				statistics.increaseAmountCorrectAnswer();
 			System.out.println("Do another Question? (y/n)");
 		} while (Funktions.validConsoleInput().equals("y"));
 
@@ -55,8 +54,8 @@ public class Quiz
 	
 	private void printQuestion(String[] answers)
 	{
-		for(int i = 0; i < m_answers.length; i++)
-			System.out.print("["+(i+1)+"] " + m_answers[i] + (i < m_answers.length -1 ? ", " : "\n"));
+		for(int i = 0; i < answers.length; i++)
+			System.out.print("["+(i+1)+"] " + answers[i] + (i < answers.length -1 ? ", " : "\n"));
 	}
 	
 	public void setResult(boolean correctAnswer)

@@ -1,7 +1,8 @@
 package Quiz;
 
+import java.util.EventListener;
 import Quiz.EventHandling.QuizEventSource;
-
+import Utility.Funktions;
 
 /**
  * @author olaffthunder
@@ -14,6 +15,7 @@ public class Question
 	private String[] m_answers = new String[0];
 	private int m_correctAnswer = -1;
 	private final int MAXANSWERS = 4;
+	private QuizEventSource m_eventSource = null;
 	
 	/**
 	 * Creates a new Question with it's answers. Also shuffles the order of answers.
@@ -28,49 +30,34 @@ public class Question
 		m_questionText = question;
 		m_correctAnswer = correctAnswer;
 		shuffleAnswers();
+		m_eventSource = new QuizEventSource();
 	}
 	
 	private void shuffleAnswers()
 	{
-	//TODO funktioniert doch noch nicht-.-"
 		String[] tmpAnswer = new String[MAXANSWERS];
-		String tmpAnswerText = "";		
-		int newCorrectAnswer = randomPosition()%MAXANSWERS;
+		int newCorrectAnswer = Funktions.randomPosition()%MAXANSWERS;
 		tmpAnswer[newCorrectAnswer] = m_answers[m_correctAnswer];
 		m_answers[m_correctAnswer] = null;
-		
-		for(int tmpCount = 0; tmpCount < tmpAnswer.length;)
-		{
-			int pos = randomPosition() % m_answers.length;
-			if(m_answers[pos] == null)
-				continue;
-			
-			if(tmpCount == m_correctAnswer)
-			{
-				tmpCount++;
-				continue;
-			}
-			
-			tmpAnswerText = m_answers[pos];
+		m_correctAnswer = newCorrectAnswer;
 
-			int newPos = randomPosition() % 4;
+		for(int tmpCount = 1; tmpCount < tmpAnswer.length;)
+		{
+			int pos = Funktions.randomPosition() % m_answers.length;
+			while(m_answers[pos] == null)
+				pos = Funktions.randomPosition() % m_answers.length;
 			
-			if(tmpAnswer[newPos] != null)
-				continue;
-			
-			tmpAnswer[newPos] = tmpAnswerText;
+			int newPos = Funktions.randomPosition() % tmpAnswer.length;
+			while(tmpAnswer[newPos] != null)
+				newPos = Funktions.randomPosition() % 4;
+							
+			tmpAnswer[newPos] = m_answers[pos];;
 			m_answers[pos] = null;
 			tmpCount++;
 		}
-
-		m_correctAnswer = newCorrectAnswer;
 		m_answers = tmpAnswer;
 	}
 
-	private int randomPosition()
-	{
-		return (int)(Math.random() *100);
-	}		
 	
 	public boolean isAnswerCorrect(int givenAnswer)
 	{
@@ -79,9 +66,10 @@ public class Question
 		return givenAnswer == m_correctAnswer;
 	}
 	
-	public void answer(int givenAnswer, QuizEventSource quizSource)
+	public void answer()
 	{		
-		quizSource.answerEvent(isAnswerCorrect(givenAnswer));
+		int givenAnswer = Funktions.getUserValue();
+		m_eventSource.answerEvent(isAnswerCorrect(givenAnswer));
 	}
 	
 	public String getQuestion()
@@ -94,4 +82,8 @@ public class Question
 		return m_answers;
 	}
 
+	public void addEventListener(EventListener listener)
+	{
+		m_eventSource.addEventListener(listener);
+	}
 }

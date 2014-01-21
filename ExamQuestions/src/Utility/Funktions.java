@@ -44,4 +44,9 @@ public class Funktions {
 		return userAnswer-1;
 	}
 
+	public static int randomPosition()
+	{
+		return (int)(Math.random() *100);
+	}		
+	
 }
