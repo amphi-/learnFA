@@ -1,3 +1,5 @@
+DISCONTINUED FOR NOW
+
 learnFA v0.1dev 16/01/2014
 ============================
 
